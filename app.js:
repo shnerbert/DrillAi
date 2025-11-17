@@ -1,0 +1,98 @@
+// DrillAI v0.1 – core math logic
+// All dimensions in mm, m, L, and minutes.
+
+// Utility: round to given decimals
+function round(value, decimals = 3) {
+  if (isNaN(value)) return NaN;
+  const factor = Math.pow(10, decimals);
+  return Math.round(value * factor) / factor;
+}
+
+// ANNULAR CAPACITY
+// Formula (metric, mm → L/m):
+// L/m = π × (D_hole^2 − D_pipe^2) / 4000
+function calcAnnularCapacity(holeIDmm, pipeODmm) {
+  if (holeIDmm <= pipeODmm) return NaN;
+  const pi = Math.PI;
+  return (pi * (holeIDmm * holeIDmm - pipeODmm * pipeODmm)) / 4000;
+}
+
+// PIPE CAPACITY
+// L/m = π × ID^2 / 4000
+function calcPipeCapacity(pipeIDmm) {
+  const pi = Math.PI;
+  return (pi * pipeIDmm * pipeIDmm) / 4000;
+}
+
+// BOTTOMS-UP TIME
+// Inputs:
+//   capacity L/m
+//   length m
+//   pump rate L/min
+// Volume (L) = cap × length
+// Time (min) = Volume / rate
+function calcBottomsUpTime(capacityLpm, lengthM, rateLpMin) {
+  if (rateLpMin <= 0) return NaN;
+  const volumeL = capacityLpm * lengthM;
+  return volumeL / rateLpMin;
+}
+
+// Wire up forms once DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  // Annular capacity form
+  const annularForm = document.getElementById("annular-form");
+  const annularResultSpan = document.getElementById("annular-result");
+
+  annularForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const hole = parseFloat(document.getElementById("annular-hole").value);
+    const pipe = parseFloat(document.getElementById("annular-pipe").value);
+
+    const result = calcAnnularCapacity(hole, pipe);
+    if (isNaN(result)) {
+      annularResultSpan.textContent = "Check IDs (hole must be > pipe)";
+      annularResultSpan.style.color = "#ff4d4f";
+    } else {
+      annularResultSpan.textContent = round(result, 3).toString();
+      annularResultSpan.style.color = "#f9c623";
+    }
+  });
+
+  // Pipe capacity form
+  const pipeForm = document.getElementById("pipe-form");
+  const pipeResultSpan = document.getElementById("pipe-result");
+
+  pipeForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const id = parseFloat(document.getElementById("pipe-id").value);
+
+    const result = calcPipeCapacity(id);
+    if (isNaN(result)) {
+      pipeResultSpan.textContent = "Enter a valid ID";
+      pipeResultSpan.style.color = "#ff4d4f";
+    } else {
+      pipeResultSpan.textContent = round(result, 3).toString();
+      pipeResultSpan.style.color = "#f9c623";
+    }
+  });
+
+  // Bottoms-up form
+  const buForm = document.getElementById("bottomsup-form");
+  const buResultSpan = document.getElementById("bottomsup-result");
+
+  buForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const cap = parseFloat(document.getElementById("bu-capacity").value);
+    const length = parseFloat(document.getElementById("bu-length").value);
+    const rate = parseFloat(document.getElementById("bu-rate").value);
+
+    const minutes = calcBottomsUpTime(cap, length, rate);
+    if (isNaN(minutes)) {
+      buResultSpan.textContent = "Check pump rate & inputs";
+      buResultSpan.style.color = "#ff4d4f";
+    } else {
+      buResultSpan.textContent = round(minutes, 2).toString();
+      buResultSpan.style.color = "#f9c623";
+    }
+  });
+});
