@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DrillAI – Rig Math Toolkit</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo">
+      <span class="logo-icon">⛏️</span>
+      <span class="logo-text">DrillAI</span>
+    </div>
+    <p class="tagline">Fast rig math. Zero guesswork.</p>
+  </header>
+
+  <main class="app-main">
+    <section class="intro">
+      <p>Select a tool below. All units are <strong>metric</strong>.</p>
+    </section>
+
+    <section class="cards">
+      <!-- Annular Capacity -->
+      <article class="card">
+        <h2>Annular Capacity</h2>
+        <p class="card-subtitle">Hole ID &amp; Pipe OD → L/m (annulus)</p>
+        <form id="annular-form">
+          <label>
+            Hole ID (mm)
+            <input type="number" id="annular-hole" step="0.01" required />
+          </label>
+          <label>
+            Pipe OD (mm)
+            <input type="number" id="annular-pipe" step="0.01" required />
+          </label>
+          <button type="submit">Calculate</button>
+        </form>
+        <p class="result">
+          Annular capacity: <span id="annular-result">–</span> L/m
+        </p>
+        <p class="note">
+          Formula: L/m = π × (D<sub>hole</sub>² − D<sub>pipe</sub>²) / 4000
+        </p>
+      </article>
+
+      <!-- Pipe Capacity -->
+      <article class="card">
+        <h2>Pipe Capacity</h2>
+        <p class="card-subtitle">Pipe ID → L/m (inside pipe)</p>
+        <form id="pipe-form">
+          <label>
+            Pipe ID (mm)
+            <input type="number" id="pipe-id" step="0.01" required />
+          </label>
+          <button type="submit">Calculate</button>
+        </form>
+        <p class="result">
+          Pipe capacity: <span id="pipe-result">–</span> L/m
+        </p>
+        <p class="note">
+          Formula: L/m = π × ID² / 4000
+        </p>
+      </article>
+
+      <!-- Bottoms-Up Time -->
+      <article class="card">
+        <h2>Bottoms-Up Time</h2>
+        <p class="card-subtitle">
+          Annular cap, interval length &amp; pump rate → minutes
+        </p>
+        <form id="bottomsup-form">
+          <label>
+            Annular capacity (L/m)
+            <input type="number" id="bu-capacity" step="0.001" required />
+          </label>
+          <label>
+            Annular interval length (m)
+            <input type="number" id="bu-length" step="0.1" required />
+          </label>
+          <label>
+            Pump rate (L/min)
+            <input type="number" id="bu-rate" step="0.1" required />
+          </label>
+          <button type="submit">Calculate</button>
+        </form>
+        <p class="result">
+          Bottoms-up time: <span id="bottomsup-result">–</span> minutes
+        </p>
+        <p class="note">
+          Volume (L) = cap × length &nbsp;•&nbsp; Time (min) = Volume / Rate
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>Built for drillers by DrillAI. v0.1</p>
+  </footer>
+</body>
+</html>
